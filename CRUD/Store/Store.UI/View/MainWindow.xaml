@@ -1,0 +1,67 @@
+﻿<Window x:Class="Store.UI.View.MainWindow"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:view="clr-namespace:Store.UI.View"
+      Title="MainWindow"
+      FontSize="{StaticResource DefaultFontSize}"
+      MinHeight="650" MinWidth="900" Height="650" Width="920"
+      Background="White" >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Margin="10" Foreground="White" FontSize="40" Grid.ColumnSpan="3">
+            <Bold Foreground="Black">Store HUMAN</Bold>
+        </TextBlock>
+        <StackPanel Background="White" Grid.Row="1" Orientation="Horizontal">
+            <Button Command="{Binding AddHumanCommand}" 
+                    ToolTip="Add human" Style="{StaticResource AddButtonStyle}" />
+        </StackPanel>
+        <view:NavigationView DataContext="{Binding NavigationViewModel}" Grid.Row="2"/>
+
+       
+
+        <TabControl ItemsSource="{Binding HumanEditViewModels}"
+                    SelectedItem="{Binding SelectedHumanEditViewModel, Mode=TwoWay}" 
+                    Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Background="White">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Human.FirstName,ValidatesOnNotifyDataErrors=False}"/>
+                        <TextBlock Text="{Binding Human.LastName}" Margin="5 0 20 0"/>
+                        <Button Content="X" Command="{Binding RelativeSource=
+                                  {RelativeSource FindAncestor,
+                                  AncestorType={x:Type TabControl}},
+                                  Path=DataContext.CloseHumanTabCommand}"
+                                CommandParameter="{Binding}"
+                                Width="20" Height="20" FontWeight="Bold" FontSize="12"
+                                Foreground="White" Padding="0">
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <view:HumanEditView/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </Grid>
+</Window>
